@@ -16,12 +16,9 @@ from groq import Groq
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# 🔥 PUT YOUR REAL KEYS HERE
+# 🔥 PUT YOUR KEYS HERE (REGENERATE AFTER TEST)
 GROQ_API_KEY = "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"
 TELEGRAM_TOKEN = "8543795911:AAF791LA5MgjXIZeXBv-NGmid3dv809MlWU"
-
-print("GROQ KEY:", GROQ_API_KEY)
-print("TELEGRAM TOKEN:", TELEGRAM_TOKEN)
 
 groq_client = Groq(api_key=GROQ_API_KEY)
 
@@ -40,6 +37,7 @@ You are a LinkedIn AI coach.
 
 # ---------------- START ----------------
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    print("START TRIGGERED")
     await update.message.reply_text(
         "🚀 Bot Ready\n\n"
         "/coach\n/post topic\n/ideas field\n\n"
@@ -76,6 +74,9 @@ async def coach(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def post(update: Update, context: ContextTypes.DEFAULT_TYPE):
     topic = " ".join(context.args)
+    if not topic:
+        await update.message.reply_text("❗ Please provide a topic.\nExample: /post AI in business")
+        return
     await generate_post(update, topic)
 
 async def ideas(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -110,6 +111,7 @@ async def generate_post(update: Update, topic: str):
 # ---------------- BUTTON ----------------
 async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
+    await query.answer()
 
     if query.data == "approve":
         await query.edit_message_text("✅ Approved! Copy & post on LinkedIn.")
@@ -118,6 +120,7 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 # ---------------- CHAT ----------------
 async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    print("MESSAGE:", update.message.text)
     await generate_content(update, update.message.text)
 
 # ---------------- MAIN ----------------
@@ -128,23 +131,14 @@ async def main():
     app.add_handler(CommandHandler("coach", coach))
     app.add_handler(CommandHandler("post", post))
     app.add_handler(CommandHandler("ideas", ideas))
-
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
     app.add_handler(CallbackQueryHandler(button_handler))
 
     print("🤖 Bot is running...")
 
-    # ✅ THIS LINE MAKES BOT RESPOND
-    await app.run_polling(close_loop=False)
+    # ✅ CLEAN & CORRECT
+    await app.run_polling()
 
 # ---------------- RUN ----------------
 if __name__ == "__main__":
-    import asyncio
-
-    try:
-        asyncio.get_running_loop()
-        # If loop already exists → use it
-        asyncio.create_task(main())
-    except RuntimeError:
-        # No loop → create one
-        asyncio.run(main())    
+    asyncio.run(main())
