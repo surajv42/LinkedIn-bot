@@ -16,7 +16,7 @@ from groq import Groq
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# 🔥 ADD YOUR KEYS HERE (REPLACE THESE)
+# 🔥 ADD YOUR KEYS HERE (CHANGE THESE)
 GROQ_API_KEY = "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"
 TELEGRAM_TOKEN = "8543795911:AAF791LA5MgjXIZeXBv-NGmid3dv809MlWU"
 
@@ -134,14 +134,11 @@ async def main():
 
     print("🤖 Bot is running...")
 
-    # ✅ Correct single call (no updater, no manual start)
+    # 🔥 IMPORTANT FIX (no loop crash)
     await app.run_polling(close_loop=False)
 
 # ---------------- RUN ----------------
 if __name__ == "__main__":
-    try:
-        asyncio.run(main())
-    except RuntimeError:
-        loop = asyncio.new_event_loop()
-        asyncio.set_event_loop(loop)
-        loop.run_until_complete(main())
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
+    loop.run_until_complete(main())
