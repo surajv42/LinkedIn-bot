@@ -17,8 +17,8 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 # 🔥 PUT YOUR REAL KEYS HERE
-GROQ_API_KEY = "PASTE_YOUR_GROQ_API_KEY"
-TELEGRAM_TOKEN = "PASTE_YOUR_TELEGRAM_BOT_TOKEN"
+GROQ_API_KEY = "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"
+TELEGRAM_TOKEN = "8543795911:AAF791LA5MgjXIZeXBv-NGmid3dv809MlWU"
 
 print("GROQ KEY:", GROQ_API_KEY)
 print("TELEGRAM TOKEN:", TELEGRAM_TOKEN)
@@ -139,6 +139,12 @@ async def main():
 
 # ---------------- RUN ----------------
 if __name__ == "__main__":
-    loop = asyncio.new_event_loop()
-    asyncio.set_event_loop(loop)
-    loop.run_until_complete(main())
+    import asyncio
+
+    try:
+        asyncio.get_running_loop()
+        # If loop already exists → use it
+        asyncio.create_task(main())
+    except RuntimeError:
+        # No loop → create one
+        asyncio.run(main())    
