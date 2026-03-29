@@ -16,9 +16,9 @@ from groq import Groq
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# 🔥 ADD YOUR KEYS HERE (CHANGE THESE)
-GROQ_API_KEY = "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"
-TELEGRAM_TOKEN = "8543795911:AAF791LA5MgjXIZeXBv-NGmid3dv809MlWU"
+# 🔥 PUT YOUR REAL KEYS HERE
+GROQ_API_KEY = "PASTE_YOUR_GROQ_API_KEY"
+TELEGRAM_TOKEN = "PASTE_YOUR_TELEGRAM_BOT_TOKEN"
 
 print("GROQ KEY:", GROQ_API_KEY)
 print("TELEGRAM TOKEN:", TELEGRAM_TOKEN)
@@ -134,7 +134,7 @@ async def main():
 
     print("🤖 Bot is running...")
 
-    # 🔥 IMPORTANT FIX (no loop crash)
+    # ✅ THIS LINE MAKES BOT RESPOND
     await app.run_polling(close_loop=False)
 
 # ---------------- RUN ----------------
