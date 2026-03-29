@@ -135,7 +135,7 @@ async def main():
     print("🤖 Bot is running...")
 
     # ✅ Correct single call (no updater, no manual start)
-    await app.run_polling()
+    await app.run_polling(close_loop=False)
 
 # ---------------- RUN ----------------
 if __name__ == "__main__":
