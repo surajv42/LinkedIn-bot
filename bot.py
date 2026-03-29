@@ -16,7 +16,7 @@ from groq import Groq
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# 🔥 ADD YOUR KEYS HERE
+# 🔥 ADD YOUR KEYS HERE (REPLACE THESE)
 GROQ_API_KEY = "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"
 TELEGRAM_TOKEN = "8543795911:AAF791LA5MgjXIZeXBv-NGmid3dv809MlWU"
 
@@ -112,7 +112,7 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
 
     if query.data == "approve":
-        await query.edit_message_text("✅ Approved! Copy & post to LinkedIn.")
+        await query.edit_message_text("✅ Approved! Copy & post on LinkedIn.")
     else:
         await query.edit_message_text("❌ Skipped")
 
@@ -134,17 +134,8 @@ async def main():
 
     print("🤖 Bot is running...")
 
-    # 🔥 MANUAL START (Fix for Python 3.14)
-    await app.initialize()
-    await app.start()
-    await app.bot.initialize()
-    await app.bot.start()
-
-    await app.updater.start_polling()
-
-    # keep alive loop
-    while True:
-        await asyncio.sleep(10)
+    # ✅ Correct single call (no updater, no manual start)
+    await app.run_polling()
 
 # ---------------- RUN ----------------
 if __name__ == "__main__":
