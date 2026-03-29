@@ -10,7 +10,7 @@ from groq import Groq
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-groq_client = Groq(api_key=os.getenv("GROQ_API_KEY"))
+groq_client = Groq(api_key=os.getenv("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"))
 
 user_conversations = {}
 pending_posts = {}
