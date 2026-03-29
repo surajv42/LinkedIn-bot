@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 
 # ---------------- API KEY HANDLING ----------------
 
-GROQ_API_KEY = os.getenv("GROQ_API_KEY")
+GROQ_API_KEY = os.getenv("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")
 
 # 🔥 Fallback if .env not working (PUT YOUR KEY HERE)
 if not GROQ_API_KEY:
@@ -142,7 +142,7 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 # ---------------- MAIN ----------------
 def main():
-    TELEGRAM_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
+    TELEGRAM_TOKEN = os.getenv("8543795911:AAF791LA5MgjXIZeXBv-NGmid3dv809MlWU")
 
     if not TELEGRAM_TOKEN:
         print("❌ TELEGRAM_BOT_TOKEN missing")
