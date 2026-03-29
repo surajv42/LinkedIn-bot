@@ -49,9 +49,9 @@ Always write posts AS Suraj in first person.
 1. Hook - strong first line
 2. Body - short paragraphs, 1-2 lines each
 3. CTA - question or engagement prompt
-4. Hashtags - 3-5 relevant ones
+4. Hashtags - 3-5 relevant ones like #QualityManagement #LeanSixSigma #BPO #ProcessExcellence #Leadership
 
-When you write a LinkedIn post, always end your response with exactly:
+When you write a LinkedIn post, always end your response with exactly this line:
 READY_TO_POST: [yes]"""
 
 
@@ -70,7 +70,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "/profile - Profile improve karna\n"
         "/calendar - 2-week content calendar\n"
         "/rewrite [text] - Post improve karna\n"
-        "/announce - AI managed profile post\n"
+        "/announce - AI managed profile post banana\n"
         "/clear - History clear karo\n\n"
         "Voice messages bhi bhej sakte ho!\n"
         "Hindi ya English - dono samajhta hoon!"
@@ -91,39 +91,42 @@ async def post_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE):
         return
     await generate_content(
         update,
-        "Write a LinkedIn post for Suraj about: " + topic + ". Write in first person. End with READY_TO_POST: [yes]"
+        "Write a LinkedIn post for Suraj about: " + topic + ". Write in first person as Suraj. End with READY_TO_POST: [yes]"
     )
 
 
 async def ideas(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await generate_content(
         update,
-        "Give Suraj 10 specific LinkedIn post ideas based on his background in quality management, BPO, Lean Six Sigma, and business consulting."
+        "Give Suraj 10 specific LinkedIn post ideas based on his background in quality management, BPO, Lean Six Sigma, and business consulting. Make them specific and engaging."
     )
 
 
 async def connect(update: Update, context: ContextTypes.DEFAULT_TYPE):
     role = " ".join(context.args) if context.args else None
     if not role:
-        await update.message.reply_text("Kisko connect karna hai?\nExample: /connect VP of Operations at BPO")
+        await update.message.reply_text(
+            "Kisko connect karna hai?\n"
+            "Example: /connect VP of Operations at BPO"
+        )
         return
     await generate_content(
         update,
-        "Write a LinkedIn connection message from Suraj Vishwakarma (Quality Lead) to a " + role + ". Warm, specific, under 150 words."
+        "Write a LinkedIn connection message from Suraj Vishwakarma (Quality Lead & Business Consultant) to a " + role + ". Keep it warm, specific, non-spammy, under 150 words."
     )
 
 
 async def profile(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await generate_content(
         update,
-        "Suggest improvements for Suraj's LinkedIn: 1) Powerful headline, 2) Strong About section, 3) 3 achievement bullets for his current role at Etech Global Services."
+        "Suggest improvements for Suraj's LinkedIn: 1) A powerful headline, 2) A strong About section opening, 3) 3 achievement-focused bullet points for his current role at Etech Global Services."
     )
 
 
 async def calendar(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await generate_content(
         update,
-        "Create a 2-week LinkedIn content calendar for Suraj. Mix topics: quality tips, BPO insights, Lean Six Sigma, leadership, Power BI. Include day, theme, and post angle."
+        "Create a 2-week LinkedIn content calendar for Suraj Vishwakarma. Mix topics: quality tips, BPO insights, Lean Six Sigma, leadership stories, Power BI tips, career lessons. Include day, theme, and specific post angle for each day."
     )
 
 
@@ -134,16 +137,18 @@ async def rewrite(update: Update, context: ContextTypes.DEFAULT_TYPE):
         return
     await generate_content(
         update,
-        "Rewrite this LinkedIn post for Suraj with better hook and CTA. End with READY_TO_POST: [yes]\n\n" + text
+        "Rewrite this LinkedIn post for Suraj with a better hook and stronger CTA. End with READY_TO_POST: [yes]\n\n" + text
     )
 
 
 async def announce(update: Update, context: ContextTypes.DEFAULT_TYPE):
     prompt = (
         "Write a LinkedIn post for Suraj Vishwakarma announcing that his LinkedIn profile is now being managed with AI assistance. "
-        "The post should be authentic and professional. Explain that AI helps him share more consistent insights from his 10+ years of quality management experience. "
-        "Emphasize that all thoughts and expertise are 100% his own - AI just helps express them better. "
-        "Invite his network to engage. Make it exciting and forward-thinking. "
+        "The post should be authentic and professional. "
+        "Explain that AI helps him share more consistent insights from his 10+ years of quality management experience. "
+        "Emphasize that all thoughts and expertise are 100% his own - AI just helps him express them better and more consistently. "
+        "Invite his network to engage and give feedback. "
+        "Make it exciting and forward-thinking for the quality management and BPO community. "
         "End with READY_TO_POST: [yes]"
     )
     await generate_content(update, prompt)
@@ -164,7 +169,7 @@ async def generate_content(update: Update, user_message: str):
 
     try:
         response = groq_client.chat.completions.create(
-            model="mixtral-8x7b-32768",
+            model="llama3-70b-8192",
             messages=[{"role": "system", "content": SYSTEM_PROMPT}] + user_conversations[user_id],
             temperature=0.7,
             max_tokens=1500,
@@ -180,8 +185,8 @@ async def generate_content(update: Update, user_message: str):
             pending_posts[user_id] = clean_reply
             keyboard = [
                 [
-                    InlineKeyboardButton("Post to LinkedIn (Copy)", callback_data="approve_" + str(user_id)),
-                    InlineKeyboardButton("Skip", callback_data="skip_post")
+                    InlineKeyboardButton("✅ Post to LinkedIn", callback_data="approve_" + str(user_id)),
+                    InlineKeyboardButton("❌ Skip", callback_data="skip_post")
                 ]
             ]
             reply_markup = InlineKeyboardMarkup(keyboard)
@@ -205,8 +210,9 @@ async def button_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
         post_content = pending_posts.get(user_id)
         if post_content:
             await query.edit_message_text(
-                post_content + "\n\nCopy the post above and paste it on LinkedIn!\n"
-                "LinkedIn auto-posting coming soon once you add your LinkedIn credentials in Render."
+                post_content + "\n\n"
+                "Copy the post above and paste it on LinkedIn!\n"
+                "Auto-posting coming soon."
             )
             del pending_posts[user_id]
         else:
@@ -233,9 +239,8 @@ async def handle_voice(update: Update, context: ContextTypes.DEFAULT_TYPE):
             )
         os.unlink(tmp_path)
 
-        transcribed_text = transcription
-        await update.message.reply_text("Aapne kaha:\n" + transcribed_text)
-        await generate_content(update, transcribed_text)
+        await update.message.reply_text("Aapne kaha:\n" + transcription)
+        await generate_content(update, transcription)
 
     except Exception as e:
         await update.message.reply_text("Voice processing error: " + str(e))
