@@ -124,21 +124,22 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await generate_content(update, update.message.text)
 
 # ---------------- MAIN ----------------
-async def main():
+def main():
     app = Application.builder().token(TELEGRAM_TOKEN).build()
 
     app.add_handler(CommandHandler("start", start))
     app.add_handler(CommandHandler("coach", coach))
     app.add_handler(CommandHandler("post", post))
     app.add_handler(CommandHandler("ideas", ideas))
+
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
     app.add_handler(CallbackQueryHandler(button_handler))
 
     print("🤖 Bot is running...")
 
-    # ✅ CLEAN & CORRECT
-    await app.run_polling()
+    # ✅ This handles event loop internally (NO asyncio needed)
+    app.run_polling()
 
-# ---------------- RUN ----------------
+
 if __name__ == "__main__":
-    asyncio.run(main())
+    main()
