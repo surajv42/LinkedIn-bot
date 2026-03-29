@@ -18,7 +18,7 @@ logger = logging.getLogger(__name__)
 
 # 🔥 ADD YOUR KEYS HERE
 GROQ_API_KEY = "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"
-TELEGRAM_TOKEN = "8543795911:AAF791LA5MgjXIZeXBv-NGmid3dv809MlWU"
+TELEGRAM_TOKEN = "8543795911:AAF791LA5MgjXIZeXBv-NGmid3dv809MlWU""
 
 print("GROQ KEY:", GROQ_API_KEY)
 print("TELEGRAM TOKEN:", TELEGRAM_TOKEN)
@@ -32,7 +32,7 @@ pending_posts = {}
 SYSTEM_PROMPT = """
 You are a LinkedIn AI coach.
 
-- Help create posts
+- Help create LinkedIn posts
 - Ask smart questions
 - Keep responses professional
 - Convert daily work into content
@@ -103,7 +103,8 @@ async def generate_post(update: Update, topic: str):
     ]
 
     await update.message.reply_text(
-        post_text, reply_markup=InlineKeyboardMarkup(keyboard)
+        post_text,
+        reply_markup=InlineKeyboardMarkup(keyboard)
     )
 
 # ---------------- BUTTON ----------------
@@ -111,7 +112,7 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
 
     if query.data == "approve":
-        await query.edit_message_text("✅ Approved! Copy & post.")
+        await query.edit_message_text("✅ Approved! Copy & post to LinkedIn.")
     else:
         await query.edit_message_text("❌ Skipped")
 
@@ -133,13 +134,23 @@ async def main():
 
     print("🤖 Bot is running...")
 
-    await app.run_polling()
+    # 🔥 MANUAL START (Fix for Python 3.14)
+    await app.initialize()
+    await app.start()
+    await app.bot.initialize()
+    await app.bot.start()
+
+    await app.updater.start_polling()
+
+    # keep alive loop
+    while True:
+        await asyncio.sleep(10)
 
 # ---------------- RUN ----------------
 if __name__ == "__main__":
-    import asyncio
-
-    loop = asyncio.new_event_loop()
-    asyncio.set_event_loop(loop)
-
-    loop.run_until_complete(main())
+    try:
+        asyncio.run(main())
+    except RuntimeError:
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
+        loop.run_until_complete(main())
